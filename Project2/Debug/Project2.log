@@ -1,0 +1,12 @@
+﻿main.obj : error LNK2019: unresolved external symbol __imp__glfwInit referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwTerminate referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwSetErrorCallback referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwDefaultWindowHints referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwWindowHint referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwCreateWindow referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwDestroyWindow referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwWindowShouldClose referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwPollEvents referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwMakeContextCurrent referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwSwapBuffers referenced in function _main
+c:\users\jason\documents\visual studio 2015\Projects\Project2\Debug\Project2.exe : fatal error LNK1120: 11 unresolved externals
