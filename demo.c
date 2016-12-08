@@ -25,7 +25,7 @@ typedef struct pic {
 
 pic *render;
 
-const Vertex Vertices[] = {
+Vertex Vertices[] = {
   {{1, -1, 0},  {.9999, .9999}},
   {{1, 1, 0},   {.9999, 0}},
   {{-1, 1, 0},  {0, 0}},
@@ -140,6 +140,41 @@ void read_file(FILE* filee , char* magicnumber , char* width , char* height ){
       render[i].b = b;
     }
 }
+void move(int movement){
+	 if (movement == 0 ){
+			Vertices[0].position[1] += .15;
+            Vertices[1].position[1] += .15;
+            Vertices[2].position[1] += .15;
+            Vertices[3].position[1] += .15;
+	 }else if (movement == 1 ){
+			Vertices[0].position[1] += - .15;
+            Vertices[1].position[1] += - .15;
+            Vertices[2].position[1] += - .15;
+            Vertices[3].position[1] += - .15;
+	 }else if (movement == 2 ){
+			Vertices[0].position[0] += - .15;
+            Vertices[1].position[0] += - .15;
+            Vertices[2].position[0] += - .15;
+            Vertices[3].position[0] += - .15;
+	 }else if (movement == 3 ){
+			Vertices[0].position[0] += .15;
+            Vertices[1].position[0] += .15;
+            Vertices[2].position[0] += .15;
+            Vertices[3].position[0] += .15;
+	 }
+
+    
+}
+void shear(int movement){
+	printf("hi");
+}
+void rotate(int movement){
+	printf("hi");
+}
+void scale(int movement){
+	printf("hi");
+}
+
 void keys(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_UP && action == GLFW_PRESS){
@@ -167,18 +202,6 @@ void keys(GLFWwindow* window, int key, int scancode, int action, int mods)
 	}
 }
 
-void move(int movement){
-	printf("hi");
-}
-void shear(int movement){
-	printf("hi");
-}
-void rotate(int movement){
-	printf("hi");
-}
-void scale(int movement){
-	printf("hi");
-}
 
 
 
