@@ -19,6 +19,15 @@ typedef struct {
   float TexCoord[2];
 } Vertex;
 
+typedef struct header{
+	char* magicnumber;
+	char* width;
+	char* height;
+	char* colorval;
+}header;
+
+header *head;
+
 typedef struct pic {
   unsigned char r, g, b;
 } pic;
@@ -119,71 +128,127 @@ void skip_ws(FILE* input_file) {
   }
   ungetc(c, input_file);
 }
-
-void read_file(FILE* filee , char* magicnumber , char* width , char* height ){
+void read_header(FILE* filee){
+	char temp[64];
+	int a = 0;
+	skip_ws(filee);
+	temp[a] = fgetc(filee);
+	a +=1;
+	temp[a] = fgetc(filee); 
 	
+	a = 0; 
+	strcpy(head->magicnumber, temp); 
+	memset(temp, 0, 64);  
+	
+	skip_ws(filee);
+	char c = fgetc(filee);
+	while(!isspace(c)){
+		if(c == '#'){
+			skip_ws(filee);
+			c = fgetc(filee); 
+		}
+		temp[a] = c; 
+		a +=1;
+        c = fgetc(filee);
+	}	
+	a = 0; 
+	strcpy(head->width, temp); 
+
+	skip_ws(filee);
+	c = fgetc(filee);
+	while(!isspace(c)){
+		temp[a] = c; 
+		a +=1;
+		c = fgetc(filee);	
+	}
+	
+	a =0; 
+	strcpy(head->height, temp); 		
+	skip_ws(filee);
+	c = fgetc(filee);
+	while(!isspace(c)){
+		temp[a] = c; 
+		a +=1;
+		c = fgetc(filee);	
+	}
+	strcpy(head->colorval, temp); 	
+	skip_ws(filee);
+}
+
+void read_file(FILE* filee  ){
 	int place;
-    int size = atoi(width) * atoi(height);
+    int size = atoi(head->width) * atoi(head->height);
     int r;
     int g;
     int b;
-	if ((strcmp(magicnumber, "P3") ==0) || (strcmp(magicnumber, "p3") ==0) ){
+	if ((strcmp(head->magicnumber, "P3") ==0) || (strcmp(head->magicnumber, "p3") ==0) ){
 		for(int i = 0; i < size; i++){
-
 			place = fgetc(filee);
 			while(place  == ' ' || place  == '\n'){
 				place = fgetc(filee);
 			}
 			ungetc(place, filee);
 			fscanf(filee, "%d %d %d", &r, &g, &b);
-			render[i].r = r;
-			render[i].g = g;
-			render[i].b = b;
+			if (r > atoi(head->colorval) || g > atoi(head->colorval) || b > atoi(head->colorval) || r < 0 || g < 0 || b < 0){
+				printf("Error: Number values are less than 0 or greater than colorvalue");
+				return(1);
+			}else{
+				render[i].r = r;
+				render[i].g = g;
+				render[i].b = b;
+			}
 		}
-	}else if ((strcmp(magicnumber, "P6") ==0) || (strcmp(magicnumber, "p6") ==0) ){
+	}else if ((strcmp(head->magicnumber, "P6") ==0) || (strcmp(head->magicnumber, "p6") ==0) ){
 		for(int i = 0; i < size; i++){
 			fread(&render[i].r, 1, 1, filee);
 			fread(&render[i].g, 1, 1, filee);
 			fread(&render[i].b, 1, 1, filee);
+			if (render[i].r > atoi(head->colorval) || render[i].g > atoi(head->colorval) || render[i].b > atoi(head->colorval) || render[i].r < 0 || render[i].g < 0 || render[i].b < 0){
+				printf("Error: Number values are less than 0 or greater than colorvalue");
+				return(1);
+			}
 		}
+	}else{
+		printf("Error: On supports p3 and p6 image files\n");
+		return(1);
 	}
 }
 void move(int movement){
-	 if (movement == 0 ){
-			Vertices[0].position[1] += .15;
-            Vertices[1].position[1] += .15;
-            Vertices[2].position[1] += .15;
-            Vertices[3].position[1] += .15;
-	 }else if (movement == 1 ){
-			Vertices[0].position[1] -= .15;
-            Vertices[1].position[1] -= .15;
-            Vertices[2].position[1] -= .15;
-            Vertices[3].position[1] -= .15;
-	 }else if (movement == 2 ){
-			Vertices[0].position[0] -= .15;
-            Vertices[1].position[0] -= .15;
-            Vertices[2].position[0] -= .15;
-            Vertices[3].position[0] -= .15;
-	 }else if (movement == 3 ){
-			Vertices[0].position[0] += .15;
-            Vertices[1].position[0] += .15;
-            Vertices[2].position[0] += .15;
-            Vertices[3].position[0] += .15;
-	 }
+	if (movement == 0 ){
+		Vertices[0].position[1] += .15;
+        Vertices[1].position[1] += .15;
+        Vertices[2].position[1] += .15;
+        Vertices[3].position[1] += .15;
+	}else if (movement == 1 ){
+		Vertices[0].position[1] -= .15;
+        Vertices[1].position[1] -= .15;
+        Vertices[2].position[1] -= .15;
+        Vertices[3].position[1] -= .15;
+	}else if (movement == 2 ){
+		Vertices[0].position[0] -= .15;
+        Vertices[1].position[0] -= .15;
+        Vertices[2].position[0] -= .15;
+        Vertices[3].position[0] -= .15;
+	}else if (movement == 3 ){
+		Vertices[0].position[0] += .15;
+        Vertices[1].position[0] += .15;
+        Vertices[2].position[0] += .15;
+        Vertices[3].position[0] += .15;
+	}
 
     
 }
 void shear(int movement){
 	if (movement == 0){
-			Vertices[0].position[0] += 0.1;
-            Vertices[3].position[0] += 0.1;
-			Vertices[2].position[0] -= 0.1;
-            Vertices[1].position[0] -= 0.1;
+		Vertices[0].position[0] += 0.1;
+        Vertices[3].position[0] += 0.1;
+		Vertices[2].position[0] -= 0.1;
+        Vertices[1].position[0] -= 0.1;
 	}else if (movement == 1){
-			Vertices[0].position[0] -= 0.1;
-            Vertices[3].position[0] -= 0.1;
-			Vertices[2].position[0] += 0.1;
-            Vertices[1].position[0] += 0.1;
+		Vertices[0].position[0] -= 0.1;
+        Vertices[3].position[0] -= 0.1;
+		Vertices[2].position[0] += 0.1;
+        Vertices[1].position[0] += 0.1;
 	}
     
 }
@@ -191,30 +256,29 @@ void rotate(int movement){
 	printf("hi");
 }
 void scale(int movement){
-	   if (movement == 0){
-			Vertices[0].position[0] *= 1.1;
-            Vertices[0].position[1] *= 1.1;
-            Vertices[1].position[0] *= 1.1;
-            Vertices[1].position[1] *= 1.1; 
-            Vertices[2].position[0] *= 1.1; 
-            Vertices[2].position[1] *= 1.1;
-            Vertices[3].position[0] *= 1.1;
-            Vertices[3].position[1] *= 1.1;
-	   }else if (movement == 1){
-			Vertices[0].position[0] *= .9;
-            Vertices[0].position[1] *= .9;
-            Vertices[1].position[0] *= .9;
-            Vertices[1].position[1] *= .9;  
-            Vertices[2].position[0] *= .9; 
-            Vertices[2].position[1] *= .9;
-            Vertices[3].position[0] *= .9;
-            Vertices[3].position[1] *= .9;
-	   }
+	if (movement == 0){
+		Vertices[0].position[0] *= 1.1;
+        Vertices[0].position[1] *= 1.1;
+        Vertices[1].position[0] *= 1.1;
+        Vertices[1].position[1] *= 1.1; 
+        Vertices[2].position[0] *= 1.1; 
+        Vertices[2].position[1] *= 1.1;
+        Vertices[3].position[0] *= 1.1;
+        Vertices[3].position[1] *= 1.1;
+	}else if (movement == 1){
+		Vertices[0].position[0] *= .9;
+        Vertices[0].position[1] *= .9;
+        Vertices[1].position[0] *= .9;
+        Vertices[1].position[1] *= .9;  
+        Vertices[2].position[0] *= .9; 
+        Vertices[2].position[1] *= .9;
+        Vertices[3].position[0] *= .9;
+        Vertices[3].position[1] *= .9;
+	}
     
 }
 
-void keys(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
+void keys(GLFWwindow* window, int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_UP && action == GLFW_PRESS){
         move(0);
 	}else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS){
@@ -240,14 +304,9 @@ void keys(GLFWwindow* window, int key, int scancode, int action, int mods)
 	}
 }
 
-
-
-
-
 int main(int argc , char *argv[]) {
-	
 	if (argc != 2) {
-		printf("Error: Incorrect amount of arguments.  two is needed.\n");
+		printf("Error: Incorrect amount of arguments as it takes in one.\n");
 		return(1);
 	}
 	
@@ -255,55 +314,50 @@ int main(int argc , char *argv[]) {
 	fh = fopen(argv[1], "r");
 	
 	if(fh == NULL) {
-		perror("Error: Couldn't open file.");
-		return(-1);
+		printf("Error: File cannot be opened.");
+		return(1);
 	}
-	char* magicnumber = malloc(100);
-	char* height = malloc(100);
-	char* width = malloc(100);
-	char* colorval = malloc(100);
+	head = (struct header*)malloc(sizeof(struct header)); 
+	head->magicnumber = (char *)malloc(100);
+	head->width = (char *)malloc(100);
+	head->height = (char *)malloc(100);
+	head->colorval = (char *)malloc(100);
 
-	magicnumber = fgets(magicnumber,3,fh);
-	skip_ws(fh);
-	width= fgets(width,4,fh);
-	skip_ws(fh);
-	height = fgets(height,4,fh);
-	skip_ws(fh);
-	colorval= fgets(colorval,4,fh);
+	read_header(fh);
 	
-       render = (pic *)malloc(sizeof(pic) * atoi(width) * atoi(height)  + 1);
-	   read_file(fh , magicnumber ,width,height);
-	   fclose(fh);
+    render = (pic *)malloc(sizeof(pic) * atoi(head->width) * atoi(head->height)  + 1);
+	read_file(fh );
+	fclose(fh);
 	   
 	GLint program_id, position_slot;
 	GLuint vertex_buffer;
 	GLuint index_buffer;
 
-  glfwSetErrorCallback(error_callback);
+	glfwSetErrorCallback(error_callback);
 
-  // Initialize GLFW library
-  if (!glfwInit())
-    return -1;
+	// Initialize GLFW library
+	if (!glfwInit())
+		return -1;
 
-  glfwDefaultWindowHints();
-  glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
-  glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwDefaultWindowHints();
+	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-  // Create and open a window
-  window = glfwCreateWindow(atoi(width),
-                            atoi(height),
+	// Create and open a window
+	window = glfwCreateWindow(atoi(head->width),
+                            atoi(head->height),
                             argv[1],
                             NULL,
                             NULL);
-  if (!window) {
-    glfwTerminate();
-    printf("glfwCreateWindow Error\n");
-    exit(1);
-  }
+	if (!window) {
+		glfwTerminate();
+		printf("glfwCreateWindow Error\n");
+		exit(1);
+	}
  
-  glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
   
   
 	GLuint texID;
@@ -311,7 +365,7 @@ int main(int argc , char *argv[]) {
     glBindTexture(GL_TEXTURE_2D, texID);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, atoi(width), atoi(height), 0, GL_RGB, 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, atoi(head->width), atoi(head->height), 0, GL_RGB, 
 				 GL_UNSIGNED_BYTE, render);
 	//
 
@@ -350,14 +404,14 @@ int main(int argc , char *argv[]) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
 
   // Repeat
-  while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window)) {
 	  
-glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW); // updates image if any transformations were performed
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW); // updates image if any transformations were performed
 
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glViewport(0, 0, atoi(width), atoi(height));
+		glViewport(0, 0, atoi(head->width), atoi(head->height));
 
 		glVertexAttribPointer(position_slot,
 							  3,
