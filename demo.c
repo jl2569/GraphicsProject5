@@ -142,9 +142,9 @@ void read_file(FILE* filee , char* magicnumber , char* width , char* height ){
 		}
 	}else if ((strcmp(magicnumber, "P6") ==0) || (strcmp(magicnumber, "p6") ==0) ){
 		for(int i = 0; i < size; i++){
-			fread(&pic[i].r, 1, 1, filee);
-			fread(&pic[i].g, 1, 1, filee);
-			fread(&pic[i].b, 1, 1, filee);
+			fread(&render[i].r, 1, 1, filee);
+			fread(&render[i].g, 1, 1, filee);
+			fread(&render[i].b, 1, 1, filee);
 		}
 	}
 }
@@ -180,7 +180,26 @@ void rotate(int movement){
 	printf("hi");
 }
 void scale(int movement){
-	printf("hi");
+	   if (movement == 0){
+			Vertices[0].position[0] *= 1.1;
+            Vertices[0].position[1] *= 1.1;
+            Vertices[1].position[0] *= 1.1;
+            Vertices[1].position[1] *= 1.1; 
+            Vertices[2].position[0] *= 1.1; 
+            Vertices[2].position[1] *= 1.1;
+            Vertices[3].position[0] *= 1.1;
+            Vertices[3].position[1] *= 1.1;
+	   }else if (movement == 1){
+			Vertices[0].position[0] *= .9;
+            Vertices[0].position[1] *= .9;
+            Vertices[1].position[0] *= .9;
+            Vertices[1].position[1] *= .9;  
+            Vertices[2].position[0] *= .9; 
+            Vertices[2].position[1] *= .9;
+            Vertices[3].position[0] *= .9;
+            Vertices[3].position[1] *= .9;
+	   }
+    
 }
 
 void keys(GLFWwindow* window, int key, int scancode, int action, int mods)
