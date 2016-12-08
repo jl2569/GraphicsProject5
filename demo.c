@@ -122,23 +122,31 @@ void skip_ws(FILE* input_file) {
 
 void read_file(FILE* filee , char* magicnumber , char* width , char* height ){
 	
-	int curr;
+	int place;
     int size = atoi(width) * atoi(height);
     int r;
     int g;
     int b;
-    for(int i = 0; i < size; i++){
+	if ((strcmp(magicnumber, "P3") ==0) || (strcmp(magicnumber, "p3") ==0) ){
+		for(int i = 0; i < size; i++){
 
-      curr = fgetc(filee);
-      while(curr  == ' ' || curr  == '\n'){
-          curr = fgetc(filee);
-      }
-      ungetc(curr, filee);
-      fscanf(filee, "%d %d %d", &r, &g, &b);
-      render[i].r = r;
-      render[i].g = g;
-      render[i].b = b;
-    }
+			place = fgetc(filee);
+			while(place  == ' ' || place  == '\n'){
+				place = fgetc(filee);
+			}
+			ungetc(place, filee);
+			fscanf(filee, "%d %d %d", &r, &g, &b);
+			render[i].r = r;
+			render[i].g = g;
+			render[i].b = b;
+		}
+	}else if ((strcmp(magicnumber, "P6") ==0) || (strcmp(magicnumber, "p6") ==0) ){
+		for(int i = 0; i < size; i++){
+			fread(&pic[i].r, 1, 1, filee);
+			fread(&pic[i].g, 1, 1, filee);
+			fread(&pic[i].b, 1, 1, filee);
+		}
+	}
 }
 void move(int movement){
 	 if (movement == 0 ){
