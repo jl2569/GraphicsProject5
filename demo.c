@@ -140,6 +140,47 @@ void read_file(FILE* filee , char* magicnumber , char* width , char* height ){
       render[i].b = b;
     }
 }
+void keys(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_UP && action == GLFW_PRESS){
+        move(0);
+	}else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS){
+        move(1);
+	}else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS){
+        move(2);
+	}else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
+        move(3);
+	}else if (key == GLFW_KEY_W && action == GLFW_PRESS){
+        rotate(0);
+	}else if (key == GLFW_KEY_S && action == GLFW_PRESS){
+        rotate(1);
+	}else if (key == GLFW_KEY_A && action == GLFW_PRESS){
+        scale(0);
+	}else if (key == GLFW_KEY_D && action == GLFW_PRESS){
+        scale(1);
+	}else if (key == GLFW_KEY_Q && action == GLFW_PRESS){
+        shear(0);
+	}else if (key == GLFW_KEY_E && action == GLFW_PRESS){
+        shear(1);
+	}else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+		glfwSetWindowShouldClose(window, 1);
+	}
+}
+
+void move(int movement){
+	printf("hi");
+}
+void shear(int movement){
+	printf("hi");
+}
+void rotate(int movement){
+	printf("hi");
+}
+void scale(int movement){
+	printf("hi");
+}
+
+
 
 
 int main(int argc , char *argv[]) {
@@ -279,6 +320,7 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW); // up
 					   GL_UNSIGNED_BYTE, 0);
 
 		glfwSwapBuffers(window);
+		glfwSetKeyCallback(window, keys);
 		glfwPollEvents();
   }
 
