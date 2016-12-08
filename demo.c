@@ -155,15 +155,15 @@ void move(int movement){
             Vertices[2].position[1] += .15;
             Vertices[3].position[1] += .15;
 	 }else if (movement == 1 ){
-			Vertices[0].position[1] += - .15;
-            Vertices[1].position[1] += - .15;
-            Vertices[2].position[1] += - .15;
-            Vertices[3].position[1] += - .15;
+			Vertices[0].position[1] -= .15;
+            Vertices[1].position[1] -= .15;
+            Vertices[2].position[1] -= .15;
+            Vertices[3].position[1] -= .15;
 	 }else if (movement == 2 ){
-			Vertices[0].position[0] += - .15;
-            Vertices[1].position[0] += - .15;
-            Vertices[2].position[0] += - .15;
-            Vertices[3].position[0] += - .15;
+			Vertices[0].position[0] -= .15;
+            Vertices[1].position[0] -= .15;
+            Vertices[2].position[0] -= .15;
+            Vertices[3].position[0] -= .15;
 	 }else if (movement == 3 ){
 			Vertices[0].position[0] += .15;
             Vertices[1].position[0] += .15;
@@ -174,7 +174,18 @@ void move(int movement){
     
 }
 void shear(int movement){
-	printf("hi");
+	if (movement == 0){
+			Vertices[0].position[0] += 0.1;
+            Vertices[3].position[0] += 0.1;
+			Vertices[2].position[0] -= 0.1;
+            Vertices[1].position[0] -= 0.1;
+	}else if (movement == 1){
+			Vertices[0].position[0] -= 0.1;
+            Vertices[3].position[0] -= 0.1;
+			Vertices[2].position[0] += 0.1;
+            Vertices[1].position[0] += 0.1;
+	}
+    
 }
 void rotate(int movement){
 	printf("hi");
