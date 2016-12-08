@@ -105,7 +105,36 @@ static void error_callback(int error, const char* description) {
 }
 
 
-int main(void) {
+int main(int argc , char *argv[]) {
+	
+	if (argc != 2) {
+		printf("Error: Incorrect amount of arguments.  two is needed.\n");
+		return(1);
+	}
+	
+	FILE *fh;
+	fh = fopen(argv[1], "r");
+	
+	if(fh == NULL) {
+		perror("Error: Couldn't open file.");
+		return(-1);
+	}
+	char* magicnumber = malloc(500);
+	char* height = malloc(500);
+	char* weight = malloc(500);
+	char* colorval = malloc(500);
+
+	magicnumber = fgets(magicnumber,3,fh);
+	char rah = fgetc(fh);
+	height = fgets(height,4,fh);
+	char ah = fgetc(fh);
+	weight= fgets(weight,4,fh);
+	char mah = fgetc(fh);
+	colorval= fgets(colorval,4,fh);
+	
+	
+	fclose(fh);
+	return(0);
 
   GLint program_id, position_slot, color_slot;
   GLuint vertex_buffer;
